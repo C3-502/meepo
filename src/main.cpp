@@ -1,36 +1,43 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 #include <iostream>
 
 #include "net/io_loop.h"
 #include "net/poller.h"
+#include "net/net_addr.h"
+#include "net/tcp_listener.h"
+#include "net/tcp_connection.h"
 
 using namespace meepo::net;
 
-IOLoop *io_loop = new IOLoop;
+IOLoop *io_loop = IOLoop::instance();
 
-void test_read_func()
+int on_msg(TcpConnection& connection, IOBuffer& in_buffer)
 {
-    std::cout << "test" << std::endl;
-    io_loop->stop();
+    std::cout << "on_msg" << std::endl;
+    std::string body = "<h1>test</h1>";
+    std::string msg = "HTTP/1.1 200 OK\r\nServer: my-server\r\nContent-Length: 13\r\n\r\n";
+    std::cout << msg + body << std::endl;
+    connection.send(msg+body);
 }
+
+void on_new_connection(int fd, const NetAddr& addr, uint16_t port)
+{
+    TcpConnection *connection = new TcpConnection(fd);
+    connection->set_msg_callback(on_msg);
+}
+
 
 int main()
 {
-    PollerEvent event;
-    int ret;
-    int fd = socket(AF_INET, SOCK_STREAM, 0);
-    sockaddr_in addr = { 0 };
-    addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = INADDR_ANY;
-    addr.sin_port = htons(8080);
-    ret = bind(fd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
-    ret = listen(fd, 5);
-    event.set_fd(fd);
-    event.set_read_callback(test_read_func);
-    io_loop->update_event(&event);
+    TcpListener listener;
+    NetAddr addr;
+    addr.set_addr("127.0.0.1");
+    listener.listen(addr, 8080);
+    listener.set_new_connection_callback(on_new_connection);
     io_loop->start();
     return 0;
 }

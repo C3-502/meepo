@@ -27,11 +27,13 @@ public:
 public:
     IOLoop();
     ~IOLoop();
-
     void start();
     void stop() { status_ = stopped; }
     void update_event(PollerEvent* event);
     void delete_event(PollerEvent* event);
+
+public:
+    static IOLoop* instance();
 
 private:
     void handle_active_events();

@@ -2,6 +2,7 @@
 // Created by lxy on 2018/2/27.
 //
 #include "poller.h"
+#include "io_loop.h"
 
 namespace meepo
 {
@@ -9,7 +10,7 @@ namespace meepo
 namespace net
 {
 PollerEvent::PollerEvent()
-    : status_(PollerEvent::New)
+    : fd_(-1), status_(PollerEvent::New), io_loop_(IOLoop::instance())
 {
 
 }
@@ -30,6 +31,24 @@ void PollerEvent::handle_event()
 }
 
 void PollerEvent::update_to_poller()
+{
+    io_loop_->update_event(this);
+}
+
+void PollerEvent::enable_read()
+{
+    events_ |= EventIn;
+    update_to_poller();
+}
+
+void PollerEvent::enable_write()
+{
+    events_ |= EventOut;
+    update_to_poller();
+}
+
+PollerEvent::PollerEvent(int fd)
+    : fd_(fd), status_(New), io_loop_(IOLoop::instance())
 {
 
 }

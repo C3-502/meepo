@@ -39,13 +39,14 @@ public:
     };
 
 public:
-    NetAddr();
+    NetAddr() {}
     ~NetAddr() {}
     void set_addr(const std::string &addr);
+    void set_addr(const sockaddr& addr);
 
-    NetAddrType type() { return type_; }
-    IPv4Addr ipv4_addr(); //转化为ipv4地址
-    IPv6Addr ipv6_addr(); //转化为ipv6地址
+    NetAddrType type() const { return type_; }
+    IPv4Addr ipv4_addr() const { return a4_; } //转化为ipv4地址
+    IPv6Addr ipv6_addr() const { return a6_; } //转化为ipv6地址
 
 private:
     void set_addr_impl(uint32_t a4);

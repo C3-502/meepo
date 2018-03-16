@@ -45,6 +45,15 @@ void IOLoop::delete_event(PollerEvent *event)
 {
     poller_->delete_events(event);
 }
+IOLoop *IOLoop::instance()
+{
+    static IOLoop* io_loop = nullptr;
+    if (io_loop == nullptr)
+    {
+        io_loop = new IOLoop;
+    }
+    return io_loop;
+}
 
 }
 

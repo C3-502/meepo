@@ -41,6 +41,7 @@ public:
     using EventCallback = std::function<void()>;
 public:
     PollerEvent();
+    PollerEvent(int fd);
     ~PollerEvent()
     {}
     int fd()
@@ -82,6 +83,7 @@ public:
     }
 
     void enable_read();
+    void enable_write();
 
     void handle_event();
 
