@@ -52,6 +52,18 @@ PollerEvent::PollerEvent(int fd)
 {
 
 }
+void PollerEvent::disable_write()
+{
+    events_ &= ~EventOut;
+    update_to_poller();
+}
+
+void PollerEvent::disable_read()
+{
+
+    events_ &= ~EventIn;
+    update_to_poller();
+}
 
 Poller::Poller(IOLoop* io_loop)
     : epfd_(-1), io_loop_(io_loop), events_(new epoll_event[Poller::events_size])

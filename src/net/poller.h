@@ -83,7 +83,10 @@ public:
     }
 
     void enable_read();
+    void disable_read();
+
     void enable_write();
+    void disable_write();
 
     void handle_event();
 

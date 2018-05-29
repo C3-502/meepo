@@ -1,9 +1,9 @@
 //
-// Created by lxy on 18-3-15.
+// Created by lxy on 18-5-27.
 //
 
-#ifndef MEEPO_IO_BUFFER_H
-#define MEEPO_IO_BUFFER_H
+#ifndef MEEPO_MEEPO_H
+#define MEEPO_MEEPO_H
 
 namespace meepo
 {
@@ -46,5 +46,4 @@ private:
 
 }
 
-
-#endif //MEEPO_IO_BUFFER_H
+#endif //MEEPO_MEEPO_H

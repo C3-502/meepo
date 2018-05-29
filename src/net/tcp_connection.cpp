@@ -29,8 +29,27 @@ void TcpConnection::handle_read()
 
 void TcpConnection::handle_write()
 {
+    if (!out_buffer_.empty())
+    {
 
+    }
+    int send_num = ::write(fd_, out_buffer_.data(), out_buffer_.size());
+
+    if (send_num < 0)
+    {
+
+    }
+    else if (send_num < out_buffer_.size())
+    {
+        out_buffer_.pop(send_num);
+    }
+    else
+    {
+        out_buffer_.pop_all();
+        event_.disable_write();
+    }
 }
+
 void TcpConnection::send(const std::string &msg)
 {
     int send_num = 0;
@@ -41,7 +60,9 @@ void TcpConnection::send(const std::string &msg)
         send_num = write(fd_, msg.c_str(), len);
     }
     out_buffer_.push(msg.c_str() + send_num, len - send_num);
+    event_.enable_write();
 }
+
 }
 
 }

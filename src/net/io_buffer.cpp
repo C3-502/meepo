@@ -76,6 +76,18 @@ void IOBuffer::read_from_fd(int fd)
         end_ += nsize;
     }
 }
+void IOBuffer::pop(int size)
+{
+    // pop from the front of the buffer
+    if (size >= this->size())
+        this->pop_all();
+    else
+        start_ += size;
+}
+void IOBuffer::pop_all()
+{
+    start_ = end_ = 0;
+}
 
 }
 
